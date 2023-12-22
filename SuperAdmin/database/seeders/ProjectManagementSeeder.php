@@ -18,7 +18,7 @@ class ProjectManagementSeeder extends Seeder
                 'project_id' => 'PROJ_' . date('YmdHis'),
                 'projectname' => 'AMS P-1',
                 'projectuser' => 'KOMINFO',
-                'projectdeadline' => '20-05-2024'
+                'projectdeadline' => '2024-04-15'
             ]);
             $this->command->info('Successfully seeding.');
         } else {
