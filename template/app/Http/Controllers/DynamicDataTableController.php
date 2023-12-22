@@ -38,7 +38,7 @@ class DynamicDataTableController extends Controller
         $setting_title = SettingTitle::first();
 
         $loggedInUser = Auth::user();
-        
+
         // get all data from dynamic_data_table table
         $dynamic_data_table = DynamicDataTable::all();
         // get column list of dynamic_data_tables table
@@ -134,6 +134,8 @@ class DynamicDataTableController extends Controller
 
     public function create()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $item_names = Item::all();
@@ -167,7 +169,7 @@ class DynamicDataTableController extends Controller
             $hidden_new_columns = array_merge($hidden_columns, $id_column, $item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column);
             $visible_new_columns = array_diff($list_column, $hidden_new_columns);
 
-            return view('dynamic-table.create', compact('item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'visible_new_columns'));
+            return view('dynamic-table.create', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'visible_new_columns'));
         } else {
             return redirect()->back();
         }
@@ -344,6 +346,8 @@ class DynamicDataTableController extends Controller
 
     public function edit($id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $item_names = Item::all();
@@ -378,7 +382,7 @@ class DynamicDataTableController extends Controller
 
             $dynamic_data_table_images = DataTableImage::where('dynamic_data_table_id', $dynamic_data_table->id)->get();
 
-            return view('dynamic-table.edit', compact('item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'id_column', 'item_column', 'manufacturer_column', 'serial_number_column','configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'updated_date_column', 'dynamic_data_table_images'));
+            return view('dynamic-table.edit', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'id_column', 'item_column', 'manufacturer_column', 'serial_number_column','configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'updated_date_column', 'dynamic_data_table_images'));
         } else {
             return redirect()->back();
         }
@@ -491,6 +495,8 @@ class DynamicDataTableController extends Controller
     
     public function show($id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $item_names = Item::all();
         $manufacturer_names = Manufacturer::all();
         $configuration_status_names = ConfigurationStatus::all();
@@ -518,7 +524,7 @@ class DynamicDataTableController extends Controller
 
         $dynamic_data_table_images = DataTableImage::where('dynamic_data_table_id',$dynamic_data_table->id)->get();
 
-        return view('dynamic-table.show', compact('item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'dynamic_data_table_images'));
+        return view('dynamic-table.show', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'dynamic_data_table_images'));
     }
 
     public function softDelete($id, Request $request)
@@ -545,6 +551,8 @@ class DynamicDataTableController extends Controller
 
     public function trashed()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             // get all data from dynamic_data_table table
@@ -572,7 +580,7 @@ class DynamicDataTableController extends Controller
             // $visible = array_diff($visible_columns, $hidden_new_columns);
 
         
-            return view('dynamic-table.recycleBin', compact('dynamic_data_table',  'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
+            return view('dynamic-table.recycleBin', compact('setting_title', 'dynamic_data_table',  'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
         } else {
             return redirect()->back();
         }
@@ -672,21 +680,4 @@ class DynamicDataTableController extends Controller
             'logs' => Activity::where('subject_type', Item::class)->where('subject_id', $dynamic_data_table->id)->latest()->get()
         ]);
     }
-
-    public function showLogDetail($id)
-    {
-        $log = ActivityLog::findOrFail($id);
-        // $logs = Activity::where('subject_type', Item::class)->where('subject_id', $dynamic_data_table->id)->latest()->get();
-
-        // Lakukan pengolahan data sesuai kebutuhan
-        $details = [
-            'Event' => $log->event,
-            'Subject ID' => $log->subject_id,
-            'Properties' => $log->properties,
-            // Tambahkan informasi lain yang diperlukan dari log
-        ];
-
-        return view('activity-log.log', compact('details'));
-    }
-
 }

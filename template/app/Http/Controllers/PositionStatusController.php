@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use App\Models\PositionStatus;
 use App\Models\DynamicDataTable;
@@ -19,6 +20,8 @@ class PositionStatusController extends Controller
 
     public function create()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             // get all data from dynamic_data_table table
@@ -31,7 +34,7 @@ class PositionStatusController extends Controller
             $visible_columns = array_diff($data_table_column, $hidden_columns);
             $position_status_column = array_slice($visible_columns, 7, 1);
 
-            return view('pages.management.position-statuses.create', compact('position_status_column'));
+            return view('pages.management.position-statuses.create', compact('setting_title', 'position_status_column'));
         } else {
             return redirect()->back();
         }
@@ -66,6 +69,8 @@ class PositionStatusController extends Controller
 
     public function edit($position_status_id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $position_status = PositionStatus::find($position_status_id);
@@ -74,7 +79,7 @@ class PositionStatusController extends Controller
                 return redirect()->route('pages.management.index');
             }
 
-            return view('pages.management.position-statuses.edit', compact('position_status'));
+            return view('pages.management.position-statuses.edit', compact('setting_title', 'position_status'));
         } else {
             return redirect()->back();
         }

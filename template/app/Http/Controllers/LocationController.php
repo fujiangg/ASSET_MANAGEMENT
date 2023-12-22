@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use App\Models\DynamicDataTable;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,8 @@ class LocationController extends Controller
 
     public function create()
     {
+        $setting_title = SettingTitle::first();
+        
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             // get all data from dynamic_data_table table
@@ -52,7 +55,7 @@ class LocationController extends Controller
             $visible_columns = array_diff($data_table_column, $hidden_columns);
             $location_column = array_slice($visible_columns, 5, 1);
 
-            return view('pages.management.locations.create', compact('location_column'));
+            return view('pages.management.locations.create', compact('setting_title', 'location_column'));
         } else {
             return redirect()->back();
         }
@@ -93,6 +96,8 @@ class LocationController extends Controller
 
     public function edit($location_id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $location = Location::find($location_id);
@@ -101,7 +106,7 @@ class LocationController extends Controller
                 return redirect()->route('pages.management.index');
             }
 
-            return view('pages.management.locations.edit',compact('location'));
+            return view('pages.management.locations.edit',compact('setting_title', 'location'));
         } else {
             return redirect()->back();
         }

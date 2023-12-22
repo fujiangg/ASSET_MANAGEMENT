@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use App\Models\DataTableColumn;
 use App\Models\DynamicDataTable;
@@ -14,6 +15,8 @@ class DataTableColumnController extends Controller
 {
     public function index()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             // get column list of dynamic_data_tables table
@@ -28,7 +31,7 @@ class DataTableColumnController extends Controller
             // get data from data_table_columns table which is as a new column name at dynamic_data_tables table
             $columns_name_from_table = DataTableColumn::all();
 
-            return view('dynamic-table.column-management.index', compact('columns_name', 'visible_columns', 'display_columns', 'columns_name_from_table'));
+            return view('dynamic-table.column-management.index', compact('setting_title', 'columns_name', 'visible_columns', 'display_columns', 'columns_name_from_table'));
         } else {
             return redirect()->back();
         }
@@ -36,6 +39,8 @@ class DataTableColumnController extends Controller
 
     public function addColumnName()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             // get data from data_table_columns table which is as a new column name at dynamic_data_tables table
@@ -43,7 +48,7 @@ class DataTableColumnController extends Controller
             // get data only form column_name row
             $column_name = $data_table_column->pluck('column_name')->toArray();
 
-            return view('dynamic-table.column.add', compact('column_name'));
+            return view('dynamic-table.column.add', compact('setting_title', 'column_name'));
         } else {
             return redirect()->back();
         }
@@ -62,12 +67,13 @@ class DataTableColumnController extends Controller
 
     public function edit($selected_column)
     {
+        $setting_title = SettingTitle::first();
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             // Fetch the specific data based on the selected_column
             $column_data = DynamicDataTable::select($selected_column)->get();
 
-            return view('dynamic-table.column.edit', compact('selected_column', 'column_data'));
+            return view('dynamic-table.column.edit', compact('setting_title', 'selected_column', 'column_data'));
         } else {
             return redirect()->back();
         }
@@ -75,12 +81,14 @@ class DataTableColumnController extends Controller
 
     public function editNewColumn($id)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             // Fetch the specific data based on the ID
             $column_data = DataTableColumn::find($id);
 
-            return view('dynamic-table.column-management.edit', compact('column_data'));
+            return view('dynamic-table.column-management.edit', compact('setting_title', 'column_data'));
         } else {
             return redirect()->back();
         }

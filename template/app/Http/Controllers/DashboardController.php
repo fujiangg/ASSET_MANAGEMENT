@@ -59,6 +59,8 @@ class DashboardController extends Controller
 
     public function getItem($item_id)
     {
+        $setting_title = SettingTitle::first();
+
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
         // column didn't show (hidden)
@@ -89,6 +91,8 @@ class DashboardController extends Controller
 
     public function getManufacturer($manufacturer_id)
     {
+        $setting_title = SettingTitle::first();
+
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
         // column didn't show (hidden)
@@ -114,11 +118,13 @@ class DashboardController extends Controller
         $data = DynamicDataTable::select($visible_columns)->get()->toArray();
         $manufacturer_tables = DynamicDataTable::where($manufacturer_status, $manufacturer_id)->get();
 
-        return view('dynamic-table.filter-results.manufacturer', compact('manufacturer_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
+        return view('dynamic-table.filter-results.manufacturer', compact('setting_title', 'manufacturer_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
     }
 
     public function getConfigurationStatus($configuration_status_id)
     {
+        $setting_title = SettingTitle::first();
+
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
         // column didn't show (hidden)
@@ -144,11 +150,13 @@ class DashboardController extends Controller
         // get configuration status data from dynamic_data_table table
         $configuration_tables = DynamicDataTable::where($configuration_status, $configuration_status_id)->get();
 
-        return view('dynamic-table.filter-results.configuration-status', compact('configuration_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
+        return view('dynamic-table.filter-results.configuration-status', compact('setting_title', 'configuration_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
     }
 
     public function getLocation($location_id)
     {
+        $setting_title = SettingTitle::first();
+
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
         // column didn't show (hidden)
@@ -173,11 +181,13 @@ class DashboardController extends Controller
         // get location data from dynamic_data_table table
         $location_tables = DynamicDataTable::where($location, $location_id)->get();
 
-        return view('dynamic-table.filter-results.location', compact('location_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
+        return view('dynamic-table.filter-results.location', compact('setting_title', 'location_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
     }
 
     public function getPositionStatus($position_status_id)
     {
+        $setting_title = SettingTitle::first();
+
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
         // column didn't show (hidden)
@@ -203,7 +213,7 @@ class DashboardController extends Controller
         // get position status data from dynamic_data_table table
         $position_status_tables = DynamicDataTable::where($position_status, $position_status_id)->get();
 
-        return view('dynamic-table.filter-results.position-status', compact('position_status_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column',));
+        return view('dynamic-table.filter-results.position-status', compact('setting_title', 'position_status_tables', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column',));
     }
 
 }

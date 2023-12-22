@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\Location;
 use App\Models\Manufacturer;
+use App\Models\SettingTitle;
 use App\Models\PositionStatus;
 use App\Models\DynamicDataTable;
 use App\Models\ConfigurationStatus;
@@ -20,6 +21,8 @@ class CombinedController extends Controller
 
     public function index()
     {
+        $setting_title = SettingTitle::first();
+        
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
 
@@ -43,7 +46,7 @@ class CombinedController extends Controller
             $location_column = array_slice($visible_columns, 5, 1);
             $position_status_column = array_slice($visible_columns, 7, 1);
 
-            return view('pages.management.index', compact('configuration_statuses', 'items', 'locations', 'manufacturers', 'position_statuses', 'item_column', 'manufacturer_column', 'configuration_status_column', 'location_column', 'position_status_column',));
+            return view('pages.management.index', compact('setting_title', 'configuration_statuses', 'items', 'locations', 'manufacturers', 'position_statuses', 'item_column', 'manufacturer_column', 'configuration_status_column', 'location_column', 'position_status_column',));
         } else {
             return redirect()->back();
         }

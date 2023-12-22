@@ -30,10 +30,12 @@ class UserManagementController extends Controller
 
     public function create()
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             $role_names = Role::all();
-            return view('user-management.create', compact('role_names'));
+            return view('user-management.create', compact('setting_title', 'role_names'));
         } else {
             return redirect()->back();
         }
@@ -76,6 +78,8 @@ class UserManagementController extends Controller
 
     public function edit($user_id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1])) {
             $user = User::find($user_id);
@@ -86,7 +90,7 @@ class UserManagementController extends Controller
 
             $role_names = Role::all();
 
-            return view('user-management.edit', compact('user', 'role_names'));
+            return view('user-management.edit', compact('setting_title', 'user', 'role_names'));
         } else {
             return redirect()->back();
         }

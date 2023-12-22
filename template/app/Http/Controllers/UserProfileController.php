@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,9 @@ class UserProfileController extends Controller
 {
     public function index()
     {       
-        return view('user-profile.index');
+        $setting_title = SettingTitle::first();
+
+        return view('user-profile.index', compact('setting_title'));
     }
 
     public function updatePersonalInformation(Request $request)

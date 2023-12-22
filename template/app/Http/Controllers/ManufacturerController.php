@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Manufacturer;
+use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use App\Models\DynamicDataTable;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,8 @@ class ManufacturerController extends Controller
 
     public function create()
     {
+        $setting_title = SettingTitle::first();
+        
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             // get all data from dynamic_data_table table
@@ -31,7 +34,7 @@ class ManufacturerController extends Controller
             $visible_columns = array_diff($data_table_column, $hidden_columns);
             $manufacturer_column = array_slice($visible_columns, 2, 1);
 
-            return view('pages.management.manufacturers.create', compact('manufacturer_column'));
+            return view('pages.management.manufacturers.create', compact('setting_title', 'manufacturer_column'));
         } else {
             return redirect()->back();
         }
@@ -66,6 +69,8 @@ class ManufacturerController extends Controller
 
     public function edit($manufacturer_id, Request $request)
     {
+        $setting_title = SettingTitle::first();
+
         $loggedInUser = Auth::user();
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $manufacturer = Manufacturer::find($manufacturer_id);
@@ -74,7 +79,7 @@ class ManufacturerController extends Controller
                 return redirect()->route('pages.management.index');
             }
 
-            return view('pages.management.manufacturers.edit', compact('manufacturer'));
+            return view('pages.management.manufacturers.edit', compact('setting_title', 'manufacturer'));
         } else {
             return redirect()->back();
         }
