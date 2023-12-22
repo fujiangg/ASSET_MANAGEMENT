@@ -1,0 +1,123 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: #F9F9F9;
+  }
+  
+  .container {
+    position: absolute;
+    max-width: 800px;
+    height: 500px;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .myRightCtn {
+    position: relative;
+    background:  #007BFF;
+    border-radius: 25px;
+    height: 100%;
+    padding: 25px;
+    color: #F4F6F9;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .myLeftCtn {
+    position: relative;
+    background:#F4F6F9;
+    border-radius: 25px;
+    height: 100%;
+    padding: 25px;
+    padding-left: 50px;
+  }
+  
+  .myLeftCtn header {
+    color: #007BFF;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .row{
+    height: 100%;
+    } 
+  
+  .myCard {
+    position: relative;
+    background:#F4F6F9;
+    height: 100%;
+    border-radius: 25px;
+    box-shadow: 0px 10px 40px -10px rgba(0, 0, 0, 0.7);
+  }
+  
+  .myRightCtn header {
+    color: #F4F6F9;
+    font-size: 44px;
+  }
+  .box {
+    position: relative;
+    margin: 20px;
+    margin-bottom: 100px;
+  } 
+  .myLeftCtn .myInput {
+    width: 230px;
+    border-radius: 25px;
+    padding: 10px;
+    padding-left: 50px;
+    border: none;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  }
+  
+  .myLeftCtn .myInput:focus {
+    outline: none;
+  }
+  
+  .myForm {
+    position: relative;
+    margin-top: 50px;
+  } 
+  
+  .myLeftCtn .butt {
+    background:  #007BFF;
+    color: #F4F6F9;
+    width: 230px;
+    border: none;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0px 10px 41px -11px rgba(0, 0, 0, 0.7);
+    margin-left: 10px;
+  }
+  
+  .myLeftCtn .butt:hover {
+    background: #3998FF;
+  }
+  
+  .myLeftCtn .fas {
+    position: relative;
+    color: #000;
+    left: 36px;
+  } 
+  
+  .butt_out {
+    background: transparent;
+    color: #F4F6F9;
+    width: 120px;
+    border: 2px solid #F4F6F9;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  }
+  
+  .butt_out:hover {
+    border: 2px solid #007BFF;
+  }
+  

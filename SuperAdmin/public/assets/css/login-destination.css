@@ -1,0 +1,230 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    justify-content: center;
+    margin-top: 0px;
+  }
+  
+  body {
+    background: #F9F9F9;
+  }
+  
+  .container {
+    position: absolute;
+    max-width: 800px;
+    height: 500px;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .myRightCtn,
+  .myLeftCtn {
+    position: relative;
+    border-radius: 25px;
+    height: 100%;
+    padding: 25px;
+  }
+  
+  .myRightCtn {
+    background: #007BFF;
+    color: #F4F6F9;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .myLeftCtn {
+    background: #007BFF;
+    padding-left: 5px;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  }
+  
+  .myLeftCtn header {
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .row {
+    height: 100%;
+  }
+  
+  .myRightCtn header {
+    color: #F4F6F9;
+    font-size: 44px;
+  }
+  
+  .box {
+    position: relative;
+    margin: 20px 0; /* Sesuaikan margin atas dan bawah */
+    margin-bottom: 120px;
+  }
+  
+  
+  .myLeftCtn .myInput {
+    width: 230px;
+    border-radius: 25px;
+    padding: 10px;
+    padding-left: 50px;
+    border: none;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  }
+  
+  .myLeftCtn .myInput:focus {
+    outline: none;
+  }
+  
+  .myForm {
+    position: relative;
+    margin-top: 50px;
+  }
+  
+  .myLeftCtn .butt {
+    background: #0760be;
+    color: #fff;
+    width: 230px;
+    border: none;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0px 10px 41px -11px rgba(0, 0, 0, 0.7);
+    margin-left: 10px;
+  }
+  
+  .myLeftCtn .butt:hover {
+    background: #007BFF;
+  }
+  
+  .myLeftCtn .fas {
+    position: relative;
+    color: #000;
+    left: 36px;
+  }
+  
+  .butt_out {
+    background: transparent;
+    color: #F4F6F9;
+    width: 120px;
+    border: 2px solid #F4F6F9;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  }
+  
+  .butt_out:hover {
+    border: 2px solid #007BFF;
+  }
+  
+  /* Dropdown styles */
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  /* Add this to your existing CSS */
+  
+  .dropdown-menu {
+    background-color: #F9F9F9; /* Background color of the dropdown */
+    border: 1px solid #ddd; /* Border color */
+    border-radius: 15px; /* Border radius */
+    width: 220px; /* Lebar tetap untuk dropdown menu */
+    
+  }
+  
+  .dropdown-item {
+    color: #000; /* Text color */
+  }
+  
+  .dropdown-item:hover {
+    background-color: #ddd; /* Hover background color warna pilih slect */
+  }
+  
+  .dropdown button {
+    color: #000;
+    padding: 14px 16px;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #F4F6F9;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+    margin-left: 10px;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown:hover button {
+    background-color: #F4F6F9;
+  }
+  
+  .left-text {
+    text-align: left !important;
+    padding-left: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .dropdown-toggle::after {
+    display: none;
+  }
+  
+  .options {
+    display: none;
+  }
+  
+  .dropdown-btn {
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+  }
+  
+  .text{ 
+    margin-left:22px;
+    text-align:center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: #fff;
+    
+  }
+  
+  .title{ 
+    margin-left:20px;
+  }
+  
+  .dropdowntext{ 
+    text-align:center;
+    font-size: 15px;
+    
+  }
+  
+  
+  
