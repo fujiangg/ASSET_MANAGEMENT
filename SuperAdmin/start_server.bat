@@ -1,6 +1,6 @@
 @echo off
 @REM Directory of Laravel project
-cd /d F:\project-laravel\Dashboard\SuperAdmin
+cd /d F:\ASSET_MANAGEMENT\SuperAdmin
 
 @REM Run clear cache
 php artisan cache:clear
@@ -20,10 +20,11 @@ php artisan db:seed --class=FooterSeeder
 php artisan db:seed --class=HomeSeeder
 php artisan db:seed --class=MessageSeeder
 php artisan db:seed --class=NavbarSeeder
+php artisan db:seed --class=OurProjectSeeder
 
 @REM Run project data seeder into table
-php artisan db:seed --class=OurProjectSeeder
 php artisan db:seed --class=PortalLoginSeeder
+php artisan db:seed --class=ProjectManagementSeeder
 
 @REM Running server
 php artisan serve --port=8000

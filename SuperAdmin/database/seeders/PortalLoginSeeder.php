@@ -13,9 +13,14 @@ class PortalLoginSeeder extends Seeder
      */
     public function run(): void
     {
-        // PortalLogin::create([
-        //     'projectname' => 'Project Name 1',
-        //     'projectlink' => 'http://127.0.0.1:8000/login',
-        // ]);
+        if (PortalLogin::count() === 0) {
+            PortalLogin::create([
+                'projectname' => 'AMS P-1',
+                'projectlink' => 'http://127.0.0.1:8002',
+            ]);
+            $this->command->info('Successfully seeding.');
+        } else {
+            $this->command->info('OurProject table is not empty. Skipping seeding');
+        }
     }
 }
