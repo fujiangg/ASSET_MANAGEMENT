@@ -1,18 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Item;
 use App\Models\Location;
-use App\Models\DataTable;
 use App\Models\TempImage;
-use App\Models\ActivityLog;
 use App\Models\Manufacturer;
 use App\Models\SettingTitle;
 use Illuminate\Http\Request;
 use App\Models\DataTableImage;
 use App\Models\PositionStatus;
-use App\Models\DataTableColumn;
 use App\Imports\DataTableImport;
 use App\Models\DynamicDataTable;
 use Illuminate\Support\Facades\DB;
@@ -28,29 +24,31 @@ use Illuminate\Support\Facades\Validator;
 
 class DynamicDataTableController extends Controller
 {
+    // Function for initialize middleware
     public function __construct()
     {
+        // Only authenticated user can access content of this controller
         $this->middleware('auth');
     }
     
+    // Function to display the Asset Management data
     public function index()
     {
+        // get dashboard name
         $setting_title = SettingTitle::first();
-
+        // get logged user data 
         $loggedInUser = Auth::user();
-
         // get all data from dynamic_data_table table
         $dynamic_data_table = DynamicDataTable::all();
         // get column list of dynamic_data_tables table
         $data_table_column = Schema::getColumnListing('dynamic_data_tables');
-        // column didn't show (hidden)
-        $deleted = DynamicDataTable::whereNull('deleted_at')->get()->toArray();
+        // set hidden column
         $hidden_columns = ['updated_date', 'created_at', 'updated_at', 'created_by', 'updated_by', 'deleted_by'];
         // except hidden columns, display it
         $visible_columns = array_diff($data_table_column, $hidden_columns);
 
         // get name of each column
-        $id_column = array_slice($visible_columns, 0, 1);
+        // $id_column = array_slice($visible_columns, 0, 1);
         $item_column = array_slice($visible_columns, 1, 1);
         $manufacturer_column = array_slice($visible_columns, 2, 1);
         $serial_number_column = array_slice($visible_columns, 3, 1);
@@ -69,9 +67,10 @@ class DynamicDataTableController extends Controller
         $data = DynamicDataTable::select($visible_columns)->get()->toArray();
         // $new_data = DynamicDataTable::select($visible_new_columns)->get()->toArray();
       
-        return view('dynamic-table.index', compact('setting_title', 'dynamic_data_table', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'data', 'loggedInUser'));
+        return view('dynamic-table.index', compact('setting_title', 'loggedInUser','dynamic_data_table', 'data_table_column', 'visible_columns', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'data'));
     }
     
+    // Function to sync table of data_table_columns_table with dynamic_data_table when there's new column created
     public function columnSync()
     {
         $loggedInUser = Auth::user();
@@ -101,6 +100,7 @@ class DynamicDataTableController extends Controller
                 $created_date_column = array_slice($visible_columns, 8, 1)[0];
                 $updated_date_column = array_slice($visible_columns, 9, 1)[0];
 
+                // display column
                 $columns_to_preserve = [$hidden_columns, $id_column, $item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column];
 
                 $columns_to_add = array_diff($data_table_columns, $existing_columns);
@@ -132,26 +132,31 @@ class DynamicDataTableController extends Controller
         }
     }
 
+    // Function to add new data aset
     public function create()
     {
+        // Get dashboard name
         $setting_title = SettingTitle::first();
-
+        // Get logged user data
         $loggedInUser = Auth::user();
+
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
+            // Get data from option table
             $item_names = Item::all();
             $manufacturer_names = Manufacturer::all();
             $configuration_status_names = ConfigurationStatus::all();
             $location_names = Location::all();
             $position_status_names = PositionStatus::all();
+            // Get data from dynamic_data_table
             $dynamic_data_table = DynamicDataTable::all();
 
-            $data_column = DB::table('data_table_columns')->pluck('column_name')->toArray();
-
+            // Get column listing from visible column on dynamic_data_table
             $list_column = Schema::getColumnListing('dynamic_data_tables');
             $hidden_columns = ['Updated Date', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
             $visible_columns = array_diff($list_column, $hidden_columns);
-
-            $id_column = array_slice($visible_columns, 0, 1);
+            // Get column name from dynamic_data_table
+            // $id_column = array_slice($visible_columns, 0, 1);
             $item_column = array_slice($visible_columns, 1, 1);
             $manufacturer_column = array_slice($visible_columns, 2, 1);
             $serial_number_column = array_slice($visible_columns, 3, 1);
@@ -159,75 +164,28 @@ class DynamicDataTableController extends Controller
             $location_column = array_slice($visible_columns, 5, 1);
             $description_column = array_slice($visible_columns, 6, 1);
             $position_status_column = array_slice($visible_columns, 7, 1);
-            $created_date_column = array_slice($visible_columns, 8, 1);
-            $updated_date_column = array_slice($visible_columns, 9, 1);
+            // $created_date_column = array_slice($visible_columns, 8, 1);
+            // $updated_date_column = array_slice($visible_columns, 9, 1);
 
-            // Get the column name from the extracted 'Serial Number' column array
-            // $serial_number_column_name = reset($serial_number_column);
-            // $serial_number_column_data = DynamicDataTable::select($columnName)->get();
+            // $data_new_column = DB::table('data_table_columns')->pluck('column_name')->toArray();
+            // $hidden_new_columns = array_merge($hidden_columns, $id_column, $item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column);
+            // $visible_new_columns = array_diff($list_column, $hidden_new_columns);
 
-            $hidden_new_columns = array_merge($hidden_columns, $id_column, $item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column);
-            $visible_new_columns = array_diff($list_column, $hidden_new_columns);
-
-            return view('dynamic-table.create', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'visible_new_columns'));
+            return view('dynamic-table.create', compact('setting_title', 'loggedInUser', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column'));
         } else {
             return redirect()->back();
         }
     }
 
-    // public function create()
-    // {
-    //     $data_table_columns = Schema::getColumnListing('dynamic_data_tables');
-
-    //     // Columns to hide
-    //     $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
-
-    //     // Get visible columns by removing hidden columns
-    //     $visible_columns = array_diff($data_table_columns, $hidden_columns);
-
-    //     // Fetch the 'Serial Number' column (assuming it's the second visible column)
-    //     $serial_number_column = array_slice($visible_columns, 1, 1);
-
-    //     // Get the column name from the extracted 'Serial Number' column array
-    //     $columnName = reset($serial_number_column);
-
-    //     $dynamic_data_table = DynamicDataTable::all();
-    //     $data = DynamicDataTable::select($columnName)->get();
-
-    //     return view('dynamic-table.create', compact('data', 'columnName', 'serial_number_column'));
-    // }
-
-    // public function store(Request $request)
-    // {   
-    //     $data_table_columns = Schema::getColumnListing('dynamic_data_tables');
-
-    //     // Columns to hide
-    //     $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
-
-    //     // Get visible columns by removing hidden columns
-    //     $visible_columns = array_diff($data_table_columns, $hidden_columns);
-
-    //     // Fetch the 'Serial Number' column (assuming it's the second visible column)
-    //     $serial_number_column = array_slice($visible_columns, 1, 1);
-
-    //     // Get the column name from the extracted 'Serial Number' column array
-    //     $columnName = reset($serial_number_column);     
-
-    //     $dynamic_data_table = new DynamicDataTable();
-    //     $dynamic_data_table->$columnName = $request->input('serial_number');
-    //     $dynamic_data_table->save();
-
-    //     return redirect()->route('dynamic-table.index')
-    //                     ->with('success', 'Data created successfully');
-    // }
-
+    // Function to saved created data
     public function store(Request $request)
     {
+        // Get column listing from visible column on dynamic_data_table
         $list_column = Schema::getColumnListing('dynamic_data_tables');
         $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
         $visible_columns = array_diff($list_column, $hidden_columns);
-
-        $id_column = array_slice($visible_columns, 0, 1)[0];
+        // Get column name from dynamic_data_table
+        // $id_column = array_slice($visible_columns, 0, 1)[0];
         $item_column = array_slice($visible_columns, 1, 1)[0];
         $manufacturer_column = array_slice($visible_columns, 2, 1)[0];
         $serial_number_column = array_slice($visible_columns, 3, 1)[0];
@@ -235,12 +193,13 @@ class DynamicDataTableController extends Controller
         $location_column = array_slice($visible_columns, 5, 1)[0];
         $description_column = array_slice($visible_columns, 6, 1)[0];
         $position_status_column = array_slice($visible_columns, 7, 1)[0];
-        $created_date_column = array_slice($visible_columns, 8, 1)[0];
-        $updated_date_column = array_slice($visible_columns, 9, 1)[0];
+        // $created_date_column = array_slice($visible_columns, 8, 1)[0];
+        // $updated_date_column = array_slice($visible_columns, 9, 1)[0];
 
         // $hidden_new_columns = array_merge($hidden_columns, [$id_column,$item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column]);
         // $visible_new_columns = array_diff($list_column, $hidden_new_columns);
 
+        // Setting rules for each fillable column 
         $rules = [
             $item_column => 'required|exists:items,id',
             $manufacturer_column => 'required|exists:manufacturers,id',
@@ -272,6 +231,7 @@ class DynamicDataTableController extends Controller
                     $data_table->{$field} = $request->{$field};
                 }
             }
+            // Save data
             $data_table->save();
 
             if (!empty($request->image_id)){
@@ -309,59 +269,38 @@ class DynamicDataTableController extends Controller
                     $img->save($destPath);
                 }
             }
-
             session::flash('success', 'Data created successfully.');
         } else {
             session::flash('error', 'Record not found.');
         }
-
         return redirect()->route('dynamic-table.index')
                         ->with('success', 'Data created successfully');
     }
 
-    // public function edit($id, Request $request)
-    // {
-    //     $dynamic_data_table = DynamicDataTable::find($id);
-    //     // Fetch the specific data based on the selected_column
-    //     // $column_data = DynamicDataTable::select($id)->get();
-
-    //     $data_table_columns = Schema::getColumnListing('dynamic_data_tables');
-
-    //     // Columns to hide
-    //     $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
-
-    //     // Get visible columns by removing hidden columns
-    //     $visible_columns = array_diff($data_table_columns, $hidden_columns);
-
-    //     // Fetch the 'Serial Number' column (assuming it's the second visible column)
-    //     $serial_number_column = array_slice($visible_columns, 1, 1);
-
-    //     // Get the column name from the extracted 'Serial Number' column array
-    //     $columnName = reset($serial_number_column);
-
-    //     $data = DynamicDataTable::select($columnName)->get();
-
-    //     return view('dynamic-table.edit', compact('dynamic_data_table', 'serial_number_column', 'data'));
-    // }
-
+    // Function to edit existing data
     public function edit($id, Request $request)
     {
+        // Get dashboard name
         $setting_title = SettingTitle::first();
-
+        // Get logged user data
         $loggedInUser = Auth::user();
+
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
+            // Get data from option table
             $item_names = Item::all();
             $manufacturer_names = Manufacturer::all();
             $configuration_status_names = ConfigurationStatus::all();
             $location_names = Location::all();
             $position_status_names = PositionStatus::all();
-
+            // find id data
             $dynamic_data_table = DynamicDataTable::find($id);
 
+            // Get column listing from visible column on dynamic_data_table
             $list_column = Schema::getColumnListing('dynamic_data_tables');
             $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
             $visible_columns = array_diff($list_column, $hidden_columns);
-
+            // Get column name from dynamic_data_table
             $id_column = array_slice($visible_columns, 0, 1);
             $item_column = array_slice($visible_columns, 1, 1);
             $manufacturer_column = array_slice($visible_columns, 2, 1);
@@ -380,47 +319,26 @@ class DynamicDataTableController extends Controller
                 return redirect()->route('dynamic-table.index');
             }
 
+            // Get data image
             $dynamic_data_table_images = DataTableImage::where('dynamic_data_table_id', $dynamic_data_table->id)->get();
 
-            return view('dynamic-table.edit', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'id_column', 'item_column', 'manufacturer_column', 'serial_number_column','configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'updated_date_column', 'dynamic_data_table_images'));
+            return view('dynamic-table.edit', compact('setting_title', 'loggedInUser', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'id_column', 'item_column', 'manufacturer_column', 'serial_number_column','configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'updated_date_column', 'dynamic_data_table_images'));
         } else {
             return redirect()->back();
         }
     }
 
-    // public function update($id, Request $request)
-    // {
-    //     $data_table_columns = Schema::getColumnListing('dynamic_data_tables');
-
-    //     // Columns to hide
-    //     $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
-
-    //     // Get visible columns by removing hidden columns
-    //     $visible_columns = array_diff($data_table_columns, $hidden_columns);
-
-    //     // Fetch the 'Serial Number' column (assuming it's the second visible column)
-    //     $serial_number_column = array_slice($visible_columns, 1, 1);
-
-    //     // Get the column name from the extracted 'Serial Number' column array
-    //     $columnName = reset($serial_number_column);     
-
-    //     $dynamic_data_table = DynamicDataTable::find($id);
-    //     $dynamic_data_table->$columnName = $request->input('update_serial_number');
-    //     $dynamic_data_table->save();
-
-    //     return redirect()->route('dynamic-table.index')
-    //                     ->with('success', 'Data created successfully');
-    // }
-
+    // Function to save the edit changes
     public function update($id, Request $request)
     {
+        // Find id data
         $dynamic_data_table = DynamicDataTable::find($id);
-
+        // Get column listing from visible column on dynamic_data_table
         $list_column = Schema::getColumnListing('dynamic_data_tables');
         $hidden_columns = ['created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
         $visible_columns = array_diff($list_column, $hidden_columns);
-
-        $id_column = array_slice($visible_columns, 0, 1)[0];
+        // Get column name from dynamic_data_table
+        // $id_column = array_slice($visible_columns, 0, 1)[0];
         $item_column = array_slice($visible_columns, 1, 1)[0];
         $manufacturer_column = array_slice($visible_columns, 2, 1)[0];
         $serial_number_column = array_slice($visible_columns, 3, 1)[0];
@@ -428,8 +346,8 @@ class DynamicDataTableController extends Controller
         $location_column = array_slice($visible_columns, 5, 1)[0];
         $description_column = array_slice($visible_columns, 6, 1)[0];
         $position_status_column = array_slice($visible_columns, 7, 1)[0];
-        $created_date_column = array_slice($visible_columns, 8, 1)[0];
-        $updated_date_column = array_slice($visible_columns, 9, 1)[0];
+        // $created_date_column = array_slice($visible_columns, 8, 1)[0];
+        // $updated_date_column = array_slice($visible_columns, 9, 1)[0];
 
         // $hidden_new_columns = array_merge($hidden_columns, [$id_column,$item_column, $manufacturer_column, $serial_number_column, $configuration_status_column, $location_column, $description_column, $position_status_column, $created_date_column, $updated_date_column]);
         // $visible_new_columns = array_diff($list_column, $hidden_new_columns);
@@ -441,6 +359,7 @@ class DynamicDataTableController extends Controller
             ]);
         }
 
+        // Setting rules for each fillable column 
         $rules = [
             $item_column => 'required|exists:items,id',
             $manufacturer_column => 'required|exists:manufacturers,id',
@@ -468,6 +387,7 @@ class DynamicDataTableController extends Controller
                         $dynamic_data_table->{$field} = $request->{$field};
                     }
                 }
+                // Save data
                 $dynamic_data_table->save();
 
                 if (!empty($request->image_id)){
@@ -481,34 +401,38 @@ class DynamicDataTableController extends Controller
     
                     }
                 }
-    
                 session::flash('success', 'Data updated successfully.');
-    
             } else {
                 session::flash('error', 'Record not found.');
             }
-
             return redirect()->route('dynamic-table.index')
                             ->with('success', 'Data updated successfully');
         } 
     }
     
+    // Function to show detail data
     public function show($id, Request $request)
     {
+        // Get dashboard name
         $setting_title = SettingTitle::first();
+        // get logged user data 
+        $loggedInUser = Auth::user();
 
+        // Get data from option table
         $item_names = Item::all();
         $manufacturer_names = Manufacturer::all();
         $configuration_status_names = ConfigurationStatus::all();
         $location_names = Location::all();
         $position_status_names = PositionStatus::all();
-
+        // find id data
         $dynamic_data_table = DynamicDataTable::find($id);
 
+        // Get column listing from visible column on dynamic_data_table
         $list_column = Schema::getColumnListing('dynamic_data_tables');
         $hidden_columns = ['Updated Date', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
         $visible_columns = array_diff($list_column, $hidden_columns);
-        
+        // Get column name from dynamic_data_table
+        $id_column = array_slice($visible_columns, 0, 1);
         $item_column = array_slice($visible_columns, 1, 1);
         $manufacturer_column = array_slice($visible_columns, 2, 1);
         $serial_number_column = array_slice($visible_columns, 3, 1);
@@ -522,24 +446,27 @@ class DynamicDataTableController extends Controller
             return redirect()->route('dynamic-table.index');
         }
 
+        // Get data image
         $dynamic_data_table_images = DataTableImage::where('dynamic_data_table_id',$dynamic_data_table->id)->get();
 
-        return view('dynamic-table.show', compact('setting_title', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'dynamic_data_table_images'));
+        return view('dynamic-table.show', compact('setting_title', 'loggedInUser', 'item_names', 'manufacturer_names', 'configuration_status_names', 'location_names', 'position_status_names', 'dynamic_data_table', 'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column', 'dynamic_data_table_images'));
     }
 
     public function softDelete($id, Request $request)
     {
+        // get logged user data 
         $loggedInUser = Auth::user();
+
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $dynamic_data_table = DynamicDataTable::find($id);
-
             if ($dynamic_data_table == null) {
                 return response()->json([
                     'status' => false,
                     'notFound' => true
                 ]);
             }
-
+            // Delete data
             $dynamic_data_table->delete();
 
             return redirect()->route('dynamic-table.index')
@@ -551,21 +478,24 @@ class DynamicDataTableController extends Controller
 
     public function trashed()
     {
+        // Get dashboard name
         $setting_title = SettingTitle::first();
-
+        // get logged user data 
         $loggedInUser = Auth::user();
+
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             // get all data from dynamic_data_table table
             $dynamic_data_table = DynamicDataTable::onlyTrashed()->get();
             // get column list of dynamic_data_tables table
             $data_table_column = Schema::getColumnListing('dynamic_data_tables');
-            // column didn't show (hidden)
+            // hidden column
             $hidden_columns = ['updated_date', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
             // except hidden columns, display it
             $visible_columns = array_diff($data_table_column, $hidden_columns);
 
             // get name of each column
-            $id_column = array_slice($visible_columns, 0, 1);
+            // $id_column = array_slice($visible_columns, 0, 1);
             $item_column = array_slice($visible_columns, 1, 1);
             $manufacturer_column = array_slice($visible_columns, 2, 1);
             $serial_number_column = array_slice($visible_columns, 3, 1);
@@ -579,28 +509,28 @@ class DynamicDataTableController extends Controller
             // $visible_new_columns = array_diff($data_table_column, $hidden_new_columns);
             // $visible = array_diff($visible_columns, $hidden_new_columns);
 
-        
-            return view('dynamic-table.recycleBin', compact('setting_title', 'dynamic_data_table',  'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
+            return view('dynamic-table.recycleBin', compact('setting_title', 'loggedInUser', 'dynamic_data_table',  'item_column', 'manufacturer_column', 'serial_number_column', 'configuration_status_column', 'location_column', 'description_column', 'position_status_column', 'created_date_column'));
         } else {
             return redirect()->back();
         }
     }
 
+    // Function to restore deleted data
     public function restore($id, Request $request)
     {
+        // get logged user data 
         $loggedInUser = Auth::user();
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $dynamic_data_table = DynamicDataTable::whereId($id);
-
             if ($dynamic_data_table == null) {
                 return response()->json([
                     'status' => false,
                     'notFound' => true
                 ]);
             }
-
+            // Restore data
             $dynamic_data_table->restore();
-
             session::flash('success', 'Data restored successfully.');
 
             return redirect()->route('dynamic-table.recycle-bin');
@@ -609,21 +539,22 @@ class DynamicDataTableController extends Controller
         }
     }
 
+    // Function to delete permanently
     public function forceDelete($id, Request $request)
     {
+        // Get logged data user
         $loggedInUser = Auth::user();
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             $dynamic_data_table = DynamicDataTable::withTrashed()->find($id);
-
             if ($dynamic_data_table == null) {
                 return response()->json([
                     'status' => false,
                     'notFound' => true
                 ]);
             }
-
+            // Delete permanently
             $dynamic_data_table->forceDelete();
-
             session::flash('success', 'Data deleted permanently successfully.');
 
             return redirect()->route('dynamic-table.recycle-bin');
@@ -632,17 +563,24 @@ class DynamicDataTableController extends Controller
         }
     }
 
+
+    // Function to import data from excel file
     public function importexcel(Request $request)
     {
+        // Get logged user data
         $loggedInUser = Auth::user();
+        
+        // If user is Superadmin and Admin run this function
         if ($loggedInUser && in_array($loggedInUser->role_name, [1, 2])) {
             try {
+                // Validasi data type
                 $this->validate($request, [
                     'file' => 'required|mimes:csv,xls,xlsx',
                 ]);
         
                 $data = $request->file('file');
         
+                // Set name of files
                 $dataname = time() . '.' . $data->getClientOriginalExtension();
                 $data->move('imports', $dataname);
         
@@ -675,6 +613,7 @@ class DynamicDataTableController extends Controller
         }
     }
 
+    // Function to record history / log user action to dynamic_data_table 
     public function log(DynamicDataTable $dynamic_data_table) {
         return view('activity-log.log', [
             'logs' => Activity::where('subject_type', Item::class)->where('subject_id', $dynamic_data_table->id)->latest()->get()

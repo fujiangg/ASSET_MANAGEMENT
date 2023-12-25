@@ -23,8 +23,8 @@
             <div class="col-12 col-sm-12">
                 <div class="card">
                     <div class="card-header d-flex align-items-center bg-secondary">
-                        {{-- <a href="{{ route('dynamic-table.index') }}" class="text-dark"><i class="fa-solid fa-chevron-left mr-2 mt-2"></i></a> --}}
-                        <a href="#" onclick="history.back();" class="text-dark"><i class="fa-solid fa-chevron-left mr-2 mt-2"></i></a>
+                        <a href="{{ route('dynamic-table.index') }}" class="text-dark"><i class="fa-solid fa-chevron-left mr-2 mt-2"></i></a>
+                        {{-- <a href="#" onclick="history.back();" class="text-dark"><i class="fa-solid fa-chevron-left mr-2 mt-2"></i></a> --}}
                         <h4 class="m-0">Create New Asset Data</h4>
                     </div>
                     <div class="card-body">
@@ -139,6 +139,7 @@
                                     </div>
                                 </div>
                                 @endforeach --}}
+                                {{-- Image Column --}}
                                 <div>
                                     <label for="image">Upload Image</label>
                                     <div id="image" class="dropzone dz-clickable">

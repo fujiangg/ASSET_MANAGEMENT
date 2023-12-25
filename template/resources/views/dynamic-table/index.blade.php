@@ -133,12 +133,6 @@
                                         @foreach ($created_date_column as $column)
                                             <th>{{ $column }}</th>
                                         @endforeach
-                                        {{-- @foreach ($deleted_at_column as $column)
-                                            <td>{{ $column }}</td>
-                                        @endforeach --}}
-                                        {{-- @foreach ($visible_new_columns as $column)
-                                            <th>{{ $column }}</th>
-                                        @endforeach --}}
                                         <th class="no-export">Action</th>                                    
                                     </tr>
                                 </thead>
@@ -177,6 +171,7 @@
                                                     {{ $item ? $item->name : '-' }}
                                                 </td>
                                             @endforeach
+
                                             @foreach ($location_column as $columns)
                                                 @php
                                                     $locationId = $row[$columns];
@@ -195,15 +190,6 @@
 
                                                 <td>{{ $row[reset($description_column)] }}</td>
 
-                                            {{-- @foreach ($description_column as $columns)
-                                                <td>
-                                                    {{-- @php
-                                                        $item = \App\Models\Item::find($row[$column]);
-                                                    @endphp
-                                                    {{ $item ? $item->name : '-' }} 
-                                                </td>
-                                            @endforeach --}}
-
                                             @foreach ($position_status_column as $columns)
                                                 <td>
                                                     @php
@@ -214,20 +200,6 @@
                                             @endforeach
 
                                                 <td>{{ $row[reset($created_date_column)] }}</td>
-
-                                            {{-- @foreach ($created_date_column as $columns)
-                                                <td>
-                                                    {{-- @php
-                                                        $item = \App\Models\Item::find($row[$column]);
-                                                    @endphp
-                                                    {{ $item ? $item->name : '-' }} 
-                                                </td>
-                                            @endforeach --}}
-
-                                            {{-- @foreach ($visible_new_columns as $column)
-                                                <td>{{ $row[$column] }}</td>
-                                            @endforeach --}}
-                                            {{-- <td>{{ $row[reset($visible_new_columns)] }}</td> --}}
 
                                             <td>
                                                 <a href="{{ route('dynamic-table.show', ['id' => $row['id']]) }}" class="btn btn-primary btn-sm text-white mb-2 mr-1"><i class="fa-solid fa-eye mr-2"></i>Show</a>
