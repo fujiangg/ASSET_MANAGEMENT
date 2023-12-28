@@ -33,11 +33,9 @@
                 <div class="col-md-6">
                     <div class="myRightCtn">
                         <div class="box">
-                            <header>Project Name</header>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore magna 
-                                aliqua. Ut enim ad minim veniam.</p>
-                            <input type="button" class="butt_out" value="Learn More"/>
+                            <header>Welcome!</header>
+                            <p class="justifytext">
+                                Please enter your username and password to access the system or service you are trying to reach. Make sure you fill in both fields accurately to facilitate the smooth authentication process, allowing you to access various features and services provided. Thank you</p>
                         </div>
                     </div>
                 </div>
