@@ -1,6 +1,6 @@
 @echo off
 @REM Directory of Laravel project
-cd /d F:\ASSET_MANAGEMENT\AMS P-1
+cd /d /Users/fujianggraeni/Documents/App/ASSET_MANAGEMENT/AMS P-1
 
 @REM Run clear cache
 php artisan cache:clear
@@ -25,7 +25,7 @@ php artisan db:seed --class=LocationsSeeder
 php artisan db:seed --class=PositionStatusesSeeder
 
 @REM Directory of public (where image saved)
-cd /d F:\ASSET_MANAGEMENT\AMS P-1\public
+cd /d /Users/fujianggraeni/Documents/App/ASSET_MANAGEMENT/AMS P-1/public
 
 @REM Remove storage (image saved)
 rmdir storage

@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ams-config
+  namespace: asset-management
+data:
+  APP_NAME: "AMS"
+  APP_ENV: "production"
+  APP_DEBUG: "false"
+  APP_URL: "http://ams.local"
+  DB_CONNECTION: "mysql"
+  DB_HOST: "mysql-service"
+  DB_PORT: "3306"
+  DB_DATABASE: "ams"
+  DB_USERNAME: "root"
+  DB_PASSWORD: "rootpassword"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ams
+  namespace: asset-management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ams
+  template:
+    metadata:
+      labels:
+        app: ams
+    spec:
+      containers:
+      - name: ams
+        image: ams:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: APP_NAME
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: APP_ENV
+        - name: APP_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: APP_DEBUG
+        - name: APP_URL
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: APP_URL
+        - name: DB_CONNECTION
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_CONNECTION
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_PORT
+        - name: DB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_DATABASE
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: ams-config
+              key: DB_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ams-service
+  namespace: asset-management
+spec:
+  selector:
+    app: ams
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer

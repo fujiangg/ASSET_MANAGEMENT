@@ -1,6 +1,6 @@
 @echo off
 @REM Directory of Laravel project
-cd /d F:\ASSET_MANAGEMENT\SuperAdmin
+cd /d /Users/fujianggraeni/Documents/App/ASSET_MANAGEMENT/SuperAdmin
 
 @REM Run clear cache
 php artisan cache:clear

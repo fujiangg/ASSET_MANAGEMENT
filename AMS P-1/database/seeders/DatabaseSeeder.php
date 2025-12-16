@@ -20,7 +20,14 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            ConfigurationStatusesSeeder::class,
             DashboardIdentitionSeeder::class,
+            ItemsSeeder::class,
+            LocationsSeeder::class,
+            ManufacturersSeeder::class,
+            PositionStatusesSeeder::class,
+            RolesSeeder::class,
+            UsersSeeder::class,
         ]);
     }
 }
